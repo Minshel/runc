@@ -20,7 +20,10 @@ pub fn start(command: &str) -> i32 {
     {
         let mut args: Vec<String> = vec!["-c".to_string()];
         let mut process = Command::new("sh");
-        process.arg(command);
+        for arg in command.split_whitespace() {
+            args.push(arg.to_string());
+        }
+        process.args(args);
 
         return match process.status() {
             Ok(status) => status.code().unwrap_or(-1),

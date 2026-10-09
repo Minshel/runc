@@ -7,13 +7,32 @@ use crate::parser::parse_processes;
 mod parser;
 mod process;
 
-// runc [GROUP] [CONFIG_FILE]
+const VERSION: &str = "1.0";
+
+// runc [GROUP/-v] [CONFIG_FILE]
 fn main() {
     let arguments: Vec<String> = env::args().collect();
     let config_name = arguments
         .get(2)
         .map(String::as_str)
         .unwrap_or("runinfo.command");
+
+
+    let arguments: Vec<String> = env::args().collect();
+
+    match arguments.get(1).map(String::as_str) {
+        Some("-v") => {
+            println!("\x1b[1m    RunC version {} \x1b[0m", &VERSION.to_string());
+            return;
+        }
+        None | Some("-h") => {
+            println!(
+                "\nHELP:\n \x1b[1m    Command Example: runc [GROUP/-v/-h] [CONFIG_FILE]\x1b[0m\n"
+            );
+            return;
+        }
+        _ => {}
+    }
 
     println!("\x1b[1mRunC: Running group '{}'\x1b[0m", &arguments[1]);
 
